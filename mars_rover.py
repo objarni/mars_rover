@@ -68,7 +68,3 @@ def move_rover(rover: RoverPosition, plateau_size: PlateauSize) -> RoverPosition
         return RoverPosition(x, y, rover.direction)
 
     raise RoverPositionError((x, y), plateau_size)
-
-
-def get_coordinates(positions: list[RoverPosition]) -> tuple[Coordinate]:
-    return (Coordinate(pos.x, pos.y) for pos in positions)
