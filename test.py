@@ -1,7 +1,7 @@
 import mars_rover
 import unittest
 from typings import PlateauSize, RoverPosition
-from exceptions import RoverPositionError, OccupiedPositionError, CommandError
+from exceptions import RoverPositionError, CollisionError, CommandError
 
 
 class TestMarsRover(unittest.TestCase):
@@ -51,14 +51,25 @@ class TestMarsRover(unittest.TestCase):
             [(RoverPosition(1, 0, "S"), "M")]
         )
 
-    def test_rovers_in_same_position_raises(self):
+    def test_rovers_ending_in_same_position_raises(self):
         self.assertRaises(
-            OccupiedPositionError,
+            CollisionError,
             mars_rover.execute_mission,
             PlateauSize(1, 1),
             [
                 (RoverPosition(0, 1, "S"), "M"),
                 (RoverPosition(1, 0, "W"), "M")
+            ]
+        )
+
+    def test_rover_collision_during_movement(self):
+        self.assertRaises(
+            CollisionError,
+            mars_rover.execute_mission,
+            PlateauSize(1, 1),
+            [
+                (RoverPosition(0, 1, "S"), "M"),
+                (RoverPosition(1, 0, "W"), "MRM")
             ]
         )
 

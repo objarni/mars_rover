@@ -1,5 +1,5 @@
 from typings import RoverPosition, Coordinate, PositionList, PlateauSize, RoverMission
-from exceptions import RoverPositionError, OccupiedPositionError, CommandError
+from exceptions import RoverPositionError, CollisionError, CommandError
 
 
 def execute_mission(
@@ -15,11 +15,9 @@ def execute_mission(
             rover_position = process_command(
                 command,
                 rover_position,
-                plateau_size
+                plateau_size,
+                ending_positions
             )
-
-        if ending_positions.is_occupied(rover_position.get_coordinate()):
-            raise OccupiedPositionError(rover_position.get_coordinate())
 
         ending_positions.append(rover_position)
 
@@ -29,14 +27,15 @@ def execute_mission(
 def process_command(
     command: str,
     rover_position: RoverPosition,
-    plateau_size: PlateauSize
+    plateau_size: PlateauSize,
+    ending_positions: PositionList
 ) -> RoverPosition:
 
     if command in 'LR':
         return turn_rover(rover_position, command)
 
     if command == "M":
-        return move_rover(rover_position, plateau_size)
+        return move_rover(rover_position, plateau_size, ending_positions)
 
     raise CommandError(command)
 
@@ -53,7 +52,12 @@ def turn_rover(rover: RoverPosition, turn_to: str) -> RoverPosition:
     return RoverPosition(rover.x, rover.y, new_direction)
 
 
-def move_rover(rover: RoverPosition, plateau_size: PlateauSize) -> RoverPosition:
+def move_rover(
+    rover: RoverPosition,
+    plateau_size: PlateauSize,
+    ending_positions: PositionList
+) -> RoverPosition:
+
     direction_translation = {
         "N": Coordinate(0, 1),
         "E": Coordinate(1, 0),
@@ -64,7 +68,10 @@ def move_rover(rover: RoverPosition, plateau_size: PlateauSize) -> RoverPosition
     translation = direction_translation[rover.direction]
     x, y = rover.x + translation.x, rover.y + translation.y
 
-    if (0 <= x <= plateau_size.x) and (0 <= y <= plateau_size.y):
-        return RoverPosition(x, y, rover.direction)
+    if ending_positions.is_occupied((x, y)):
+        raise CollisionError((x, y))
 
-    raise RoverPositionError((x, y), plateau_size)
+    if not ((0 <= x <= plateau_size.x) and (0 <= y <= plateau_size.y)):
+        raise RoverPositionError((x, y), plateau_size)
+
+    return RoverPosition(x, y, rover.direction)

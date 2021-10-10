@@ -17,7 +17,7 @@ class RoverPositionError(Exception):
         self.message = message or f"Rover position {self.rover_position} is out of bounds of {self.plateau_size}-sized plateau"
 
 
-class OccupiedPositionError(Exception):
+class CollisionError(Exception):
     """Exception raised for rover position in occupied spot
 
     Attributes:
@@ -28,7 +28,7 @@ class OccupiedPositionError(Exception):
     def __init__(self, rover_position: Coordinate, message=None) -> None:
         super().__init__()
         self.rover_position = rover_position
-        self.message = message or f"Rover position {self.rover_position} is already occupied"
+        self.message = message or f"Rover collision in position {self.rover_position}"
 
 
 class CommandError(Exception):
