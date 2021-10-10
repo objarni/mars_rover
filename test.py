@@ -1,7 +1,7 @@
 import mars_rover
 import unittest
 from typings import Coordinate, RoverPosition, RoverMission
-from exceptions import RoverPositionError, CollisionError, CommandError
+from exceptions import BoundsError, CollisionError, CommandError
 
 
 class TestMarsRover(unittest.TestCase):
@@ -75,7 +75,7 @@ class TestMarsRover(unittest.TestCase):
 
     def test_out_of_bounds_east_raises(self):
         self.assertRaises(
-            RoverPositionError,
+            BoundsError,
             mars_rover.execute_mission,
             Coordinate(1, 1),
             [RoverMission(RoverPosition(1, 0, "E"), "M")]
@@ -83,7 +83,7 @@ class TestMarsRover(unittest.TestCase):
 
     def test_out_of_bounds_north_raises(self):
         self.assertRaises(
-            RoverPositionError,
+            BoundsError,
             mars_rover.execute_mission,
             Coordinate(1, 1),
             [RoverMission(RoverPosition(0, 1, "N"), "M")]
@@ -91,7 +91,7 @@ class TestMarsRover(unittest.TestCase):
 
     def test_out_of_bounds_west_raises(self):
         self.assertRaises(
-            RoverPositionError,
+            BoundsError,
             mars_rover.execute_mission,
             Coordinate(1, 1),
             [RoverMission(RoverPosition(0, 1, "W"), "M")]
@@ -99,7 +99,7 @@ class TestMarsRover(unittest.TestCase):
 
     def test_out_of_bounds_south_raises(self):
         self.assertRaises(
-            RoverPositionError,
+            BoundsError,
             mars_rover.execute_mission,
             Coordinate(1, 1),
             [RoverMission(RoverPosition(1, 0, "S"), "M")]

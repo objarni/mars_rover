@@ -1,7 +1,7 @@
 from typings import Coordinate
 
 
-class RoverPositionError(Exception):
+class BoundsError(Exception):
     """Exception raised for rover position out of bounds
 
     Attributes:

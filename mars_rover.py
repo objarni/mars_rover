@@ -1,5 +1,5 @@
 from typings import RoverPosition, Coordinate, PositionList, RoverMission
-from exceptions import RoverPositionError, CollisionError, CommandError
+from exceptions import BoundsError, CollisionError, CommandError
 
 
 command_translation = {
@@ -83,6 +83,6 @@ def move_rover(
         raise CollisionError((x, y))
 
     if not ((0 <= x <= plateau_bounds.x) and (0 <= y <= plateau_bounds.y)):
-        raise RoverPositionError((x, y), plateau_bounds)
+        raise BoundsError((x, y), plateau_bounds)
 
     return RoverPosition(x, y, rover.direction)
