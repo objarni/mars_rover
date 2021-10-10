@@ -1,12 +1,12 @@
-from types import RoverPosition
+from typings import RoverPosition, PlateauSize
 
 
 directions = ("N", "E", "S", "W")
 
 
 def execute_mission(
-    plateau_size: tuple[int, int],
-    starting_positions: list[tuple[int, int, str]],
+    plateau_size: PlateauSize,
+    starting_positions: list[RoverPosition],
     command_sequences: list[str]
 ) -> list[tuple[int, int, str]]:
 
