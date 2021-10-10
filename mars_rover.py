@@ -1,5 +1,5 @@
 from typings import RoverPosition, Coordinate, PlateauSize
-from exceptions import RoverPositionError, OccupiedPositionError
+from exceptions import RoverPositionError, OccupiedPositionError, CommandError
 
 
 def execute_mission(
@@ -32,8 +32,11 @@ def process_command(
 
     if command in 'LR':
         return turn_rover(rover_position, command)
-    else:
+
+    if command == "M":
         return move_rover(rover_position, plateau_size)
+
+    raise CommandError(command)
 
 
 def turn_rover(rover: RoverPosition, turn_to: str) -> RoverPosition:

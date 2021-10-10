@@ -1,7 +1,7 @@
 import mars_rover
 import unittest
 from typings import PlateauSize, RoverPosition
-from exceptions import RoverPositionError, OccupiedPositionError
+from exceptions import RoverPositionError, OccupiedPositionError, CommandError
 
 
 class TestMarsRover(unittest.TestCase):
@@ -60,6 +60,15 @@ class TestMarsRover(unittest.TestCase):
             PlateauSize(1, 1),
             [RoverPosition(0, 1, "S"), RoverPosition(1, 0, "W")],
             ["M", "M"]
+        )
+
+    def test_invalid_command_raises(self):
+        self.assertRaises(
+            CommandError,
+            mars_rover.execute_mission,
+            PlateauSize(1, 1),
+            [RoverPosition(0, 0, "N")],
+            ["I"]
         )
 
 
