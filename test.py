@@ -15,8 +15,8 @@ class TestMarsRover(unittest.TestCase):
         )
 
         self.assertEqual(ending_positions, [
-            RoverPosition(1, 3, 'N'),
-            RoverPosition(5, 1, 'E')
+            RoverPosition(1, 3, "N"),
+            RoverPosition(5, 1, "E")
         ])
 
     def test_turns_rover_left_from_north(self):
@@ -25,7 +25,7 @@ class TestMarsRover(unittest.TestCase):
             [(RoverPosition(0, 0, "N"), "L")]
         )
 
-        self.assertEqual(ending_positions, [RoverPosition(0, 0, 'W')])
+        self.assertEqual(ending_positions, [RoverPosition(0, 0, "W")])
 
     def test_turns_rover_left_from_east(self):
         ending_positions = mars_rover.execute_mission(
@@ -33,7 +33,7 @@ class TestMarsRover(unittest.TestCase):
             [(RoverPosition(0, 0, "E"), "L")]
         )
 
-        self.assertEqual(ending_positions, [RoverPosition(0, 0, 'N')])
+        self.assertEqual(ending_positions, [RoverPosition(0, 0, "N")])
 
     def test_turns_rover_left_from_south(self):
         ending_positions = mars_rover.execute_mission(
@@ -41,7 +41,7 @@ class TestMarsRover(unittest.TestCase):
             [(RoverPosition(0, 0, "S"), "L")]
         )
 
-        self.assertEqual(ending_positions, [RoverPosition(0, 0, 'E')])
+        self.assertEqual(ending_positions, [RoverPosition(0, 0, "E")])
 
     def test_turns_rover_left_from_west(self):
         ending_positions = mars_rover.execute_mission(
@@ -49,7 +49,7 @@ class TestMarsRover(unittest.TestCase):
             [(RoverPosition(0, 0, "W"), "L")]
         )
 
-        self.assertEqual(ending_positions, [RoverPosition(0, 0, 'S')])
+        self.assertEqual(ending_positions, [RoverPosition(0, 0, "S")])
 
     def test_turns_rover_right_from_north(self):
         ending_positions = mars_rover.execute_mission(
@@ -57,7 +57,7 @@ class TestMarsRover(unittest.TestCase):
             [(RoverPosition(0, 0, "N"), "R")]
         )
 
-        self.assertEqual(ending_positions, [RoverPosition(0, 0, 'E')])
+        self.assertEqual(ending_positions, [RoverPosition(0, 0, "E")])
 
     def test_turns_rover_right_from_east(self):
         ending_positions = mars_rover.execute_mission(
@@ -65,7 +65,7 @@ class TestMarsRover(unittest.TestCase):
             [(RoverPosition(0, 0, "E"), "R")]
         )
 
-        self.assertEqual(ending_positions, [RoverPosition(0, 0, 'S')])
+        self.assertEqual(ending_positions, [RoverPosition(0, 0, "S")])
 
     def test_turns_rover_right_from_south(self):
         ending_positions = mars_rover.execute_mission(
@@ -73,7 +73,7 @@ class TestMarsRover(unittest.TestCase):
             [(RoverPosition(0, 0, "S"), "R")]
         )
 
-        self.assertEqual(ending_positions, [RoverPosition(0, 0, 'W')])
+        self.assertEqual(ending_positions, [RoverPosition(0, 0, "W")])
 
     def test_turns_rover_right_from_west(self):
         ending_positions = mars_rover.execute_mission(
@@ -81,7 +81,39 @@ class TestMarsRover(unittest.TestCase):
             [(RoverPosition(0, 0, "W"), "R")]
         )
 
-        self.assertEqual(ending_positions, [RoverPosition(0, 0, 'N')])
+        self.assertEqual(ending_positions, [RoverPosition(0, 0, "N")])
+
+    def test_move_north(self):
+        ending_positions = mars_rover.execute_mission(
+            PlateauSize(1, 1),
+            [(RoverPosition(0, 0, "N"), "M")]
+        )
+
+        self.assertEqual(ending_positions, [RoverPosition(0, 1, "N")])
+
+    def test_move_east(self):
+        ending_positions = mars_rover.execute_mission(
+            PlateauSize(1, 1),
+            [(RoverPosition(0, 0, "E"), "M")]
+        )
+
+        self.assertEqual(ending_positions, [RoverPosition(1, 0, "E")])
+
+    def test_move_south(self):
+        ending_positions = mars_rover.execute_mission(
+            PlateauSize(1, 1),
+            [(RoverPosition(0, 1, "S"), "M")]
+        )
+
+        self.assertEqual(ending_positions, [RoverPosition(0, 0, "S")])
+
+    def test_move_west(self):
+        ending_positions = mars_rover.execute_mission(
+            PlateauSize(1, 1),
+            [(RoverPosition(1, 0, "W"), "M")]
+        )
+
+        self.assertEqual(ending_positions, [RoverPosition(0, 0, "W")])
 
     def test_out_of_bounds_east_raises(self):
         self.assertRaises(
