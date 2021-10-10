@@ -10,16 +10,15 @@ def execute_mission(
 
     ending_positions = []
     for (starting_position, command_sequence) in zip(starting_positions, command_sequences):
-        rover = RoverPosition(
-            starting_position[0], starting_position[1], starting_position[2])
+        rover_position = starting_position
 
         for command in command_sequence.upper():
             if command in 'LR':
-                rover = turn_rover(rover, command)
+                rover_position = turn_rover(rover_position, command)
             else:
-                rover = move_rover(rover, plateau_size)
+                rover_position = move_rover(rover_position, plateau_size)
 
-        ending_positions.append(rover)
+        ending_positions.append(rover_position)
 
     return ending_positions
 
