@@ -1,7 +1,7 @@
 from typing import NamedTuple
 
 
-class Rover(NamedTuple):
+class RoverPosition(NamedTuple):
     x: int
     y: int
     direction: str
@@ -10,10 +10,15 @@ class Rover(NamedTuple):
 directions = ("N", "E", "S", "W")
 
 
-def execute_mission(plateau_size: tuple[int, int], starting_positions: list[tuple[int, int, str]], command_sequences: list[str]) -> list[tuple[int, int, str]]:
+def execute_mission(
+    plateau_size: tuple[int, int],
+    starting_positions: list[tuple[int, int, str]],
+    command_sequences: list[str]
+) -> list[tuple[int, int, str]]:
+
     ending_positions = []
     for (starting_position, command_sequence) in zip(starting_positions, command_sequences):
-        rover = Rover(
+        rover = RoverPosition(
             starting_position[0], starting_position[1], starting_position[2])
 
         for command in command_sequence.upper():
@@ -27,16 +32,16 @@ def execute_mission(plateau_size: tuple[int, int], starting_positions: list[tupl
     return ending_positions
 
 
-def turn_rover(rover: Rover, turn_to: str) -> Rover:
+def turn_rover(rover: RoverPosition, turn_to: str) -> RoverPosition:
     new_direction = directions[(
         directions.index(rover.direction) + 4
         + (1 if turn_to == 'R' else -1)
     ) % 4]
 
-    return Rover(rover.x, rover.y, new_direction)
+    return RoverPosition(rover.x, rover.y, new_direction)
 
 
-def move_rover(rover: Rover) -> Rover:
+def move_rover(rover: RoverPosition) -> RoverPosition:
     x, y = rover.x, rover.y
 
     if rover.direction == "N":
