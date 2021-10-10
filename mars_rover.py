@@ -1,5 +1,5 @@
 from typings import RoverPosition, PlateauSize
-
+from exceptions import RoverPositionError
 
 directions = ("N", "E", "S", "W")
 
@@ -8,7 +8,7 @@ def execute_mission(
     plateau_size: PlateauSize,
     starting_positions: list[RoverPosition],
     command_sequences: list[str]
-) -> list[tuple[int, int, str]]:
+) -> list[RoverPosition]:
 
     ending_positions = []
     for (starting_position, command_sequence) in zip(starting_positions, command_sequences):
@@ -19,9 +19,9 @@ def execute_mission(
             if command in 'LR':
                 rover = turn_rover(rover, command)
             else:
-                rover = move_rover(rover)
+                rover = move_rover(rover, plateau_size)
 
-        ending_positions.append(tuple(rover))
+        ending_positions.append(rover)
 
     return ending_positions
 
@@ -35,7 +35,7 @@ def turn_rover(rover: RoverPosition, turn_to: str) -> RoverPosition:
     return RoverPosition(rover.x, rover.y, new_direction)
 
 
-def move_rover(rover: RoverPosition) -> RoverPosition:
+def move_rover(rover: RoverPosition, plateau_size: PlateauSize) -> RoverPosition:
     x, y = rover.x, rover.y
 
     if rover.direction == "N":
@@ -47,4 +47,7 @@ def move_rover(rover: RoverPosition) -> RoverPosition:
     elif rover.direction == "W":
         x -= 1
 
-    return RoverPosition(x, y, rover.direction)
+    if (0 <= x <= plateau_size.x) and (0 <= y <= plateau_size.y):
+        return RoverPosition(x, y, rover.direction)
+
+    raise RoverPositionError((x, y), plateau_size)
