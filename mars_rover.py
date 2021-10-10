@@ -57,7 +57,7 @@ def process_command(
         return turn_rover(rover_position, side=command)
 
     if command == "M":
-        return move_rover(rover_position, plateau_bounds, rover_positions)
+        return move_rover_forward(rover_position, plateau_bounds, rover_positions)
 
     raise CommandError(command)
 
@@ -70,7 +70,7 @@ def turn_rover(rover: RoverPosition, side: str) -> RoverPosition:
     )
 
 
-def move_rover(
+def move_rover_forward(
     rover: RoverPosition,
     plateau_bounds: Coordinate,
     rover_positions: PositionList
