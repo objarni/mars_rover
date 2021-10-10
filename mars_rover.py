@@ -1,15 +1,14 @@
-from typings import RoverPosition, Coordinate, PlateauSize
+from typings import RoverPosition, Coordinate, PositionList, PlateauSize, RoverMission
 from exceptions import RoverPositionError, OccupiedPositionError, CommandError
 
 
 def execute_mission(
     plateau_size: PlateauSize,
-    starting_positions: list[RoverPosition],
-    command_sequences: list[str]
+    rover_missions: list[RoverMission]
 ) -> list[RoverPosition]:
 
-    ending_positions = []
-    for (starting_position, command_sequence) in zip(starting_positions, command_sequences):
+    ending_positions = PositionList([])
+    for (starting_position, command_sequence) in rover_missions:
         rover_position = starting_position
 
         for command in command_sequence.upper():
@@ -19,7 +18,7 @@ def execute_mission(
                 plateau_size
             )
 
-        if rover_position.get_coordinate() in get_coordinates(ending_positions):
+        if ending_positions.is_occupied(rover_position.get_coordinate()):
             raise OccupiedPositionError(rover_position.get_coordinate())
 
         ending_positions.append(rover_position)

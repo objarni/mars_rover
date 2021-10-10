@@ -8,8 +8,10 @@ class TestMarsRover(unittest.TestCase):
     def test_given_example(self):
         ending_positions = mars_rover.execute_mission(
             PlateauSize(5, 5),
-            [RoverPosition(1, 2, "N"), RoverPosition(3, 3, "E")],
-            ["LMLMLMLMM", "MMRMMRMRRM"]
+            [
+                (RoverPosition(1, 2, "N"), "LMLMLMLMM"),
+                (RoverPosition(3, 3, "E"), "MMRMMRMRRM")
+            ]
         )
 
         self.assertEqual(ending_positions, [
@@ -22,8 +24,7 @@ class TestMarsRover(unittest.TestCase):
             RoverPositionError,
             mars_rover.execute_mission,
             PlateauSize(1, 1),
-            [RoverPosition(1, 0, "E")],
-            ["M"]
+            [(RoverPosition(1, 0, "E"), "M")]
         )
 
     def test_out_of_bounds_north_raises(self):
@@ -31,8 +32,7 @@ class TestMarsRover(unittest.TestCase):
             RoverPositionError,
             mars_rover.execute_mission,
             PlateauSize(1, 1),
-            [RoverPosition(0, 1, "N")],
-            ["M"]
+            [(RoverPosition(0, 1, "N"), "M")]
         )
 
     def test_out_of_bounds_west_raises(self):
@@ -40,8 +40,7 @@ class TestMarsRover(unittest.TestCase):
             RoverPositionError,
             mars_rover.execute_mission,
             PlateauSize(1, 1),
-            [RoverPosition(0, 1, "W")],
-            ["M"]
+            [(RoverPosition(0, 1, "W"), "M")]
         )
 
     def test_out_of_bounds_south_raises(self):
@@ -49,8 +48,7 @@ class TestMarsRover(unittest.TestCase):
             RoverPositionError,
             mars_rover.execute_mission,
             PlateauSize(1, 1),
-            [RoverPosition(1, 0, "S")],
-            ["M"]
+            [(RoverPosition(1, 0, "S"), "M")]
         )
 
     def test_rovers_in_same_position_raises(self):
@@ -58,8 +56,10 @@ class TestMarsRover(unittest.TestCase):
             OccupiedPositionError,
             mars_rover.execute_mission,
             PlateauSize(1, 1),
-            [RoverPosition(0, 1, "S"), RoverPosition(1, 0, "W")],
-            ["M", "M"]
+            [
+                (RoverPosition(0, 1, "S"), "M"),
+                (RoverPosition(1, 0, "W"), "M")
+            ]
         )
 
     def test_invalid_command_raises(self):
@@ -67,8 +67,7 @@ class TestMarsRover(unittest.TestCase):
             CommandError,
             mars_rover.execute_mission,
             PlateauSize(1, 1),
-            [RoverPosition(0, 0, "N")],
-            ["I"]
+            [(RoverPosition(0, 0, "N"), "I")],
         )
 
 

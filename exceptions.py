@@ -2,7 +2,7 @@ from typings import Coordinate, PlateauSize
 
 
 class RoverPositionError(Exception):
-    """Exception raised for rover position out of bounds.
+    """Exception raised for rover position out of bounds
 
     Attributes:
         rover_position -- offending position
@@ -18,7 +18,7 @@ class RoverPositionError(Exception):
 
 
 class OccupiedPositionError(Exception):
-    """Exception raised for rover position in occupied spot.
+    """Exception raised for rover position in occupied spot
 
     Attributes:
         rover_position -- offending position
@@ -32,7 +32,7 @@ class OccupiedPositionError(Exception):
 
 
 class CommandError(Exception):
-    """Exception raised for invalid command.
+    """Exception raised for invalid command
 
     Attributes:
         command -- offending command
