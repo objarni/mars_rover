@@ -1,5 +1,5 @@
 from typings import RoverPosition, Coordinate, PlateauSize
-from exceptions import RoverPositionError
+from exceptions import RoverPositionError, OccupiedPositionError
 
 
 def execute_mission(
@@ -18,8 +18,8 @@ def execute_mission(
             else:
                 rover_position = move_rover(rover_position, plateau_size)
 
-        if rover_position.get_coordinates() in get_coordinates(ending_positions):
-            raise Exception
+        if rover_position.get_coordinate() in get_coordinates(ending_positions):
+            raise OccupiedPositionError(rover_position.get_coordinate())
 
         ending_positions.append(rover_position)
 
