@@ -17,7 +17,7 @@ class TestMarsRover(unittest.TestCase):
             RoverPosition(5, 1, 'E')
         ])
 
-    def test_out_of_bounds_east(self):
+    def test_out_of_bounds_east_raises(self):
         self.assertRaises(
             RoverPositionError,
             mars_rover.execute_mission,
@@ -26,7 +26,7 @@ class TestMarsRover(unittest.TestCase):
             ["M"]
         )
 
-    def test_out_of_bounds_north(self):
+    def test_out_of_bounds_north_raises(self):
         self.assertRaises(
             RoverPositionError,
             mars_rover.execute_mission,
@@ -35,7 +35,7 @@ class TestMarsRover(unittest.TestCase):
             ["M"]
         )
 
-    def test_out_of_bounds_west(self):
+    def test_out_of_bounds_west_raises(self):
         self.assertRaises(
             RoverPositionError,
             mars_rover.execute_mission,
@@ -44,13 +44,22 @@ class TestMarsRover(unittest.TestCase):
             ["M"]
         )
 
-    def test_out_of_bounds_south(self):
+    def test_out_of_bounds_south_raises(self):
         self.assertRaises(
             RoverPositionError,
             mars_rover.execute_mission,
             PlateauSize(1, 1),
             [RoverPosition(1, 0, "S")],
             ["M"]
+        )
+
+    def test_rovers_in_same_position_raises(self):
+        self.assertRaises(
+            Exception,
+            mars_rover.execute_mission,
+            PlateauSize(1, 1),
+            [RoverPosition(0, 1, "S"), RoverPosition(1, 0, "W")],
+            ["M", "M"]
         )
 
 

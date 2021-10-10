@@ -18,6 +18,9 @@ def execute_mission(
             else:
                 rover_position = move_rover(rover_position, plateau_size)
 
+        if rover_position.get_coordinates() in get_coordinates(ending_positions):
+            raise Exception
+
         ending_positions.append(rover_position)
 
     return ending_positions
@@ -49,3 +52,7 @@ def move_rover(rover: RoverPosition, plateau_size: PlateauSize) -> RoverPosition
         return RoverPosition(x, y, rover.direction)
 
     raise RoverPositionError((x, y), plateau_size)
+
+
+def get_coordinates(positions: list[RoverPosition]) -> tuple[Coordinate]:
+    return (Coordinate(pos.x, pos.y) for pos in positions)
