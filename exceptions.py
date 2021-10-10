@@ -1,4 +1,4 @@
-from typings import Coordinate, PlateauSize
+from typings import Coordinate
 
 
 class RoverPositionError(Exception):
@@ -10,7 +10,7 @@ class RoverPositionError(Exception):
         message -- explanation of the error
     """
 
-    def __init__(self, rover_position: Coordinate, plateau_size: PlateauSize, message=None) -> None:
+    def __init__(self, rover_position: Coordinate, plateau_size: Coordinate, message=None) -> None:
         super().__init__()
         self.rover_position = rover_position
         self.plateau_size = plateau_size

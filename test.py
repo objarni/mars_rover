@@ -1,13 +1,13 @@
 import mars_rover
 import unittest
-from typings import PlateauSize, RoverPosition, RoverMission
+from typings import Coordinate, RoverPosition, RoverMission
 from exceptions import RoverPositionError, CollisionError, CommandError
 
 
 class TestMarsRover(unittest.TestCase):
     def test_given_example(self):
         ending_positions = mars_rover.execute_mission(
-            PlateauSize(5, 5),
+            Coordinate(5, 5),
             [
                 RoverMission(RoverPosition(1, 2, "N"), "LMLMLMLMM"),
                 RoverMission(RoverPosition(3, 3, "E"), "MMRMMRMRRM")
@@ -21,7 +21,7 @@ class TestMarsRover(unittest.TestCase):
 
     def test_turns_rover_left(self):
         ending_positions = mars_rover.execute_mission(
-            PlateauSize(1, 1),
+            Coordinate(1, 1),
             [
                 RoverMission(RoverPosition(0, 0, "N"), "L"),
                 RoverMission(RoverPosition(0, 1, "E"), "L"),
@@ -39,7 +39,7 @@ class TestMarsRover(unittest.TestCase):
 
     def test_turns_rover_right(self):
         ending_positions = mars_rover.execute_mission(
-            PlateauSize(1, 1),
+            Coordinate(1, 1),
             [
                 RoverMission(RoverPosition(0, 0, "N"), "R"),
                 RoverMission(RoverPosition(0, 1, "E"), "R"),
@@ -57,7 +57,7 @@ class TestMarsRover(unittest.TestCase):
 
     def test_move_directions(self):
         ending_positions = mars_rover.execute_mission(
-            PlateauSize(2, 2),
+            Coordinate(2, 2),
             [
                 RoverMission(RoverPosition(0, 1, "N"), "M"),
                 RoverMission(RoverPosition(0, 0, "E"), "M"),
@@ -77,7 +77,7 @@ class TestMarsRover(unittest.TestCase):
         self.assertRaises(
             RoverPositionError,
             mars_rover.execute_mission,
-            PlateauSize(1, 1),
+            Coordinate(1, 1),
             [RoverMission(RoverPosition(1, 0, "E"), "M")]
         )
 
@@ -85,7 +85,7 @@ class TestMarsRover(unittest.TestCase):
         self.assertRaises(
             RoverPositionError,
             mars_rover.execute_mission,
-            PlateauSize(1, 1),
+            Coordinate(1, 1),
             [RoverMission(RoverPosition(0, 1, "N"), "M")]
         )
 
@@ -93,7 +93,7 @@ class TestMarsRover(unittest.TestCase):
         self.assertRaises(
             RoverPositionError,
             mars_rover.execute_mission,
-            PlateauSize(1, 1),
+            Coordinate(1, 1),
             [RoverMission(RoverPosition(0, 1, "W"), "M")]
         )
 
@@ -101,7 +101,7 @@ class TestMarsRover(unittest.TestCase):
         self.assertRaises(
             RoverPositionError,
             mars_rover.execute_mission,
-            PlateauSize(1, 1),
+            Coordinate(1, 1),
             [RoverMission(RoverPosition(1, 0, "S"), "M")]
         )
 
@@ -109,7 +109,7 @@ class TestMarsRover(unittest.TestCase):
         self.assertRaises(
             CollisionError,
             mars_rover.execute_mission,
-            PlateauSize(1, 1),
+            Coordinate(1, 1),
             [
                 RoverMission(RoverPosition(0, 1, "S"), "M"),
                 RoverMission(RoverPosition(1, 0, "W"), "M")
@@ -120,7 +120,7 @@ class TestMarsRover(unittest.TestCase):
         self.assertRaises(
             CollisionError,
             mars_rover.execute_mission,
-            PlateauSize(1, 1),
+            Coordinate(1, 1),
             [
                 RoverMission(RoverPosition(0, 1, "S"), "M"),
                 RoverMission(RoverPosition(1, 0, "W"), "MRM")
@@ -131,7 +131,7 @@ class TestMarsRover(unittest.TestCase):
         self.assertRaises(
             CollisionError,
             mars_rover.execute_mission,
-            PlateauSize(1, 1),
+            Coordinate(1, 1),
             [
                 RoverMission(RoverPosition(0, 1, "S"), "M"),
                 RoverMission(RoverPosition(0, 0, "N"), "M")
@@ -142,7 +142,7 @@ class TestMarsRover(unittest.TestCase):
         self.assertRaises(
             CommandError,
             mars_rover.execute_mission,
-            PlateauSize(1, 1),
+            Coordinate(1, 1),
             [RoverMission(RoverPosition(0, 0, "N"), "I")],
         )
 

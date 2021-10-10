@@ -1,9 +1,33 @@
-from typings import RoverPosition, Coordinate, PositionList, PlateauSize, RoverMission
+from typings import RoverPosition, Coordinate, PositionList, RoverMission
 from exceptions import RoverPositionError, CollisionError, CommandError
 
 
+command_translation = {
+    "N": {
+        "L": "W",
+        "R": "E",
+        "M": Coordinate(0, 1)
+    },
+    "E": {
+        "L": "N",
+        "R": "S",
+        "M": Coordinate(1, 0)
+    },
+    "S": {
+        "L": "E",
+        "R": "W",
+        "M": Coordinate(0, -1)
+    },
+    "W": {
+        "L": "S",
+        "R": "N",
+        "M": Coordinate(-1, 0)
+    },
+}
+
+
 def execute_mission(
-    plateau_size: PlateauSize,
+    plateau_bounds: Coordinate,
     rover_missions: list[RoverMission]
 ) -> list[RoverPosition]:
 
@@ -15,7 +39,7 @@ def execute_mission(
             rover_positions[i] = process_command(
                 command,
                 rover_positions[i],
-                plateau_size,
+                plateau_bounds,
                 rover_positions
             )
 
@@ -25,51 +49,36 @@ def execute_mission(
 def process_command(
     command: str,
     rover_position: RoverPosition,
-    plateau_size: PlateauSize,
-    ending_positions: PositionList
+    plateau_bounds: Coordinate,
+    rover_positions: PositionList
 ) -> RoverPosition:
 
     if command in 'LR':
-        return turn_rover(rover_position, command)
+        return RoverPosition(
+            rover_position.x,
+            rover_position.y,
+            command_translation[rover_position.direction][command]
+        )
 
     if command == "M":
-        return move_rover(rover_position, plateau_size, ending_positions)
+        return move_rover(rover_position, plateau_bounds, rover_positions)
 
     raise CommandError(command)
 
 
-def turn_rover(rover: RoverPosition, turn_to: str) -> RoverPosition:
-    directions = ("N", "E", "S", "W")
-    turn_to_translation = {"R": 1, "L": -1}
-
-    new_direction = directions[(
-        directions.index(rover.direction) +
-        turn_to_translation[turn_to] + len(directions)
-    ) % len(directions)]
-
-    return RoverPosition(rover.x, rover.y, new_direction)
-
-
 def move_rover(
     rover: RoverPosition,
-    plateau_size: PlateauSize,
-    ending_positions: PositionList
+    plateau_bounds: Coordinate,
+    rover_positions: PositionList
 ) -> RoverPosition:
 
-    direction_translation = {
-        "N": Coordinate(0, 1),
-        "E": Coordinate(1, 0),
-        "S": Coordinate(0, -1),
-        "W": Coordinate(-1, 0)
-    }
-
-    translation = direction_translation[rover.direction]
+    translation = command_translation[rover.direction]["M"]
     x, y = rover.x + translation.x, rover.y + translation.y
 
-    if ending_positions.is_occupied((x, y)):
+    if rover_positions.is_occupied((x, y)):
         raise CollisionError((x, y))
 
-    if not ((0 <= x <= plateau_size.x) and (0 <= y <= plateau_size.y)):
-        raise RoverPositionError((x, y), plateau_size)
+    if not ((0 <= x <= plateau_bounds.x) and (0 <= y <= plateau_bounds.y)):
+        raise RoverPositionError((x, y), plateau_bounds)
 
     return RoverPosition(x, y, rover.direction)

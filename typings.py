@@ -20,10 +20,6 @@ class PositionList(list):
         return any(coordinate == pos.get_coordinate() for pos in self)
 
 
-class PlateauSize(Coordinate):
-    pass
-
-
 class RoverMission(NamedTuple):
     starting_position: RoverPosition
     command_sequence: str
