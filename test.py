@@ -1,6 +1,6 @@
 import mars_rover
 import unittest
-from typings import PlateauSize, RoverPosition
+from typings import PlateauSize, RoverPosition, RoverMission
 from exceptions import RoverPositionError, CollisionError, CommandError
 
 
@@ -9,8 +9,8 @@ class TestMarsRover(unittest.TestCase):
         ending_positions = mars_rover.execute_mission(
             PlateauSize(5, 5),
             [
-                (RoverPosition(1, 2, "N"), "LMLMLMLMM"),
-                (RoverPosition(3, 3, "E"), "MMRMMRMRRM")
+                RoverMission(RoverPosition(1, 2, "N"), "LMLMLMLMM"),
+                RoverMission(RoverPosition(3, 3, "E"), "MMRMMRMRRM")
             ]
         )
 
@@ -23,46 +23,46 @@ class TestMarsRover(unittest.TestCase):
         ending_positions = mars_rover.execute_mission(
             PlateauSize(1, 1),
             [
-                (RoverPosition(0, 0, "N"), "L"),
-                (RoverPosition(0, 0, "E"), "L"),
-                (RoverPosition(0, 0, "S"), "L"),
-                (RoverPosition(0, 0, "W"), "L")
+                RoverMission(RoverPosition(0, 0, "N"), "L"),
+                RoverMission(RoverPosition(0, 1, "E"), "L"),
+                RoverMission(RoverPosition(1, 0, "S"), "L"),
+                RoverMission(RoverPosition(1, 1, "W"), "L")
             ]
         )
 
         self.assertEqual(ending_positions, [
             RoverPosition(0, 0, "W"),
-            RoverPosition(0, 0, "N"),
-            RoverPosition(0, 0, "E"),
-            RoverPosition(0, 0, "S")
+            RoverPosition(0, 1, "N"),
+            RoverPosition(1, 0, "E"),
+            RoverPosition(1, 1, "S")
         ])
 
     def test_turns_rover_right(self):
         ending_positions = mars_rover.execute_mission(
             PlateauSize(1, 1),
             [
-                (RoverPosition(0, 0, "N"), "R"),
-                (RoverPosition(0, 0, "E"), "R"),
-                (RoverPosition(0, 0, "S"), "R"),
-                (RoverPosition(0, 0, "W"), "R")
+                RoverMission(RoverPosition(0, 0, "N"), "R"),
+                RoverMission(RoverPosition(0, 1, "E"), "R"),
+                RoverMission(RoverPosition(1, 0, "S"), "R"),
+                RoverMission(RoverPosition(1, 1, "W"), "R")
             ]
         )
 
         self.assertEqual(ending_positions, [
             RoverPosition(0, 0, "E"),
-            RoverPosition(0, 0, "S"),
-            RoverPosition(0, 0, "W"),
-            RoverPosition(0, 0, "N")
+            RoverPosition(0, 1, "S"),
+            RoverPosition(1, 0, "W"),
+            RoverPosition(1, 1, "N")
         ])
 
     def test_move_directions(self):
         ending_positions = mars_rover.execute_mission(
             PlateauSize(2, 2),
             [
-                (RoverPosition(0, 1, "N"), "M"),
-                (RoverPosition(0, 0, "E"), "M"),
-                (RoverPosition(2, 1, "S"), "M"),
-                (RoverPosition(1, 1, "W"), "M")
+                RoverMission(RoverPosition(0, 1, "N"), "M"),
+                RoverMission(RoverPosition(0, 0, "E"), "M"),
+                RoverMission(RoverPosition(2, 1, "S"), "M"),
+                RoverMission(RoverPosition(1, 1, "W"), "M")
             ]
         )
 
@@ -78,7 +78,7 @@ class TestMarsRover(unittest.TestCase):
             RoverPositionError,
             mars_rover.execute_mission,
             PlateauSize(1, 1),
-            [(RoverPosition(1, 0, "E"), "M")]
+            [RoverMission(RoverPosition(1, 0, "E"), "M")]
         )
 
     def test_out_of_bounds_north_raises(self):
@@ -86,7 +86,7 @@ class TestMarsRover(unittest.TestCase):
             RoverPositionError,
             mars_rover.execute_mission,
             PlateauSize(1, 1),
-            [(RoverPosition(0, 1, "N"), "M")]
+            [RoverMission(RoverPosition(0, 1, "N"), "M")]
         )
 
     def test_out_of_bounds_west_raises(self):
@@ -94,7 +94,7 @@ class TestMarsRover(unittest.TestCase):
             RoverPositionError,
             mars_rover.execute_mission,
             PlateauSize(1, 1),
-            [(RoverPosition(0, 1, "W"), "M")]
+            [RoverMission(RoverPosition(0, 1, "W"), "M")]
         )
 
     def test_out_of_bounds_south_raises(self):
@@ -102,7 +102,7 @@ class TestMarsRover(unittest.TestCase):
             RoverPositionError,
             mars_rover.execute_mission,
             PlateauSize(1, 1),
-            [(RoverPosition(1, 0, "S"), "M")]
+            [RoverMission(RoverPosition(1, 0, "S"), "M")]
         )
 
     def test_rovers_ending_in_same_position_raises(self):
@@ -111,19 +111,30 @@ class TestMarsRover(unittest.TestCase):
             mars_rover.execute_mission,
             PlateauSize(1, 1),
             [
-                (RoverPosition(0, 1, "S"), "M"),
-                (RoverPosition(1, 0, "W"), "M")
+                RoverMission(RoverPosition(0, 1, "S"), "M"),
+                RoverMission(RoverPosition(1, 0, "W"), "M")
             ]
         )
 
-    def test_rover_collision_during_movement(self):
+    def test_collision_with_finished_rover(self):
         self.assertRaises(
             CollisionError,
             mars_rover.execute_mission,
             PlateauSize(1, 1),
             [
-                (RoverPosition(0, 1, "S"), "M"),
-                (RoverPosition(1, 0, "W"), "MRM")
+                RoverMission(RoverPosition(0, 1, "S"), "M"),
+                RoverMission(RoverPosition(1, 0, "W"), "MRM")
+            ]
+        )
+
+    def test_collision_with_not_started_rover(self):
+        self.assertRaises(
+            CollisionError,
+            mars_rover.execute_mission,
+            PlateauSize(1, 1),
+            [
+                RoverMission(RoverPosition(0, 1, "S"), "M"),
+                RoverMission(RoverPosition(0, 0, "N"), "M")
             ]
         )
 
@@ -132,7 +143,7 @@ class TestMarsRover(unittest.TestCase):
             CommandError,
             mars_rover.execute_mission,
             PlateauSize(1, 1),
-            [(RoverPosition(0, 0, "N"), "I")],
+            [RoverMission(RoverPosition(0, 0, "N"), "I")],
         )
 
 

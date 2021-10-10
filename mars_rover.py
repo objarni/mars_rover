@@ -7,21 +7,19 @@ def execute_mission(
     rover_missions: list[RoverMission]
 ) -> list[RoverPosition]:
 
-    ending_positions = PositionList([])
-    for (starting_position, command_sequence) in rover_missions:
-        rover_position = starting_position
+    rover_positions = PositionList(
+        [mission.starting_position for mission in rover_missions])
 
+    for i, (_, command_sequence) in enumerate(rover_missions):
         for command in command_sequence.upper():
-            rover_position = process_command(
+            rover_positions[i] = process_command(
                 command,
-                rover_position,
+                rover_positions[i],
                 plateau_size,
-                ending_positions
+                rover_positions
             )
 
-        ending_positions.append(rover_position)
-
-    return ending_positions
+    return rover_positions
 
 
 def process_command(
