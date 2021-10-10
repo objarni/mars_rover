@@ -35,14 +35,14 @@ def turn_rover(rover: RoverPosition, turn_to: str) -> RoverPosition:
 
 
 def move_rover(rover: RoverPosition, plateau_size: PlateauSize) -> RoverPosition:
-    directionTranslation = {
+    direction_translation = {
         "N": Coordinate(0, 1),
         "E": Coordinate(1, 0),
         "S": Coordinate(0, -1),
         "W": Coordinate(-1, 0)
     }
 
-    translation = directionTranslation[rover.direction]
+    translation = direction_translation[rover.direction]
     x, y = rover.x + translation.x, rover.y + translation.y
 
     if (0 <= x <= plateau_size.x) and (0 <= y <= plateau_size.y):
