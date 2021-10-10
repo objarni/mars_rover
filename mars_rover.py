@@ -46,8 +46,9 @@ def turn_rover(rover: RoverPosition, turn_to: str) -> RoverPosition:
     turn_to_translation = {"R": 1, "L": -1}
 
     new_direction = directions[(
-        directions.index(rover.direction) + turn_to_translation[turn_to] + 4
-    ) % 4]
+        directions.index(rover.direction) +
+        turn_to_translation[turn_to] + len(directions)
+    ) % len(directions)]
 
     return RoverPosition(rover.x, rover.y, new_direction)
 
