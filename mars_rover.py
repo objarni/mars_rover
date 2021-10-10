@@ -13,10 +13,8 @@ def execute_mission(
         rover_position = starting_position
 
         for command in command_sequence.upper():
-            if command in 'LR':
-                rover_position = turn_rover(rover_position, command)
-            else:
-                rover_position = move_rover(rover_position, plateau_size)
+            rover_position = process_command(
+                command, rover_position, plateau_size)
 
         if rover_position.get_coordinate() in get_coordinates(ending_positions):
             raise OccupiedPositionError(rover_position.get_coordinate())
@@ -24,6 +22,18 @@ def execute_mission(
         ending_positions.append(rover_position)
 
     return ending_positions
+
+
+def process_command(
+    command: str,
+    rover_position: RoverPosition,
+    plateau_size: PlateauSize
+) -> RoverPosition:
+
+    if command in 'LR':
+        return turn_rover(rover_position, command)
+    else:
+        return move_rover(rover_position, plateau_size)
 
 
 def turn_rover(rover: RoverPosition, turn_to: str) -> RoverPosition:
