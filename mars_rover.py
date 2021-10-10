@@ -53,4 +53,4 @@ def move_rover(rover: RoverPosition) -> RoverPosition:
     elif rover.direction == "W":
         x -= 1
 
-    return Rover(x, y, rover.direction)
+    return RoverPosition(x, y, rover.direction)
