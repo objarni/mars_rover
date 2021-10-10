@@ -1,7 +1,5 @@
-from typings import RoverPosition, PlateauSize
+from typings import RoverPosition, Coordinate, PlateauSize
 from exceptions import RoverPositionError
-
-directions = ("N", "E", "S", "W")
 
 
 def execute_mission(
@@ -27,6 +25,8 @@ def execute_mission(
 
 
 def turn_rover(rover: RoverPosition, turn_to: str) -> RoverPosition:
+    directions = ("N", "E", "S", "W")
+
     new_direction = directions[(
         directions.index(rover.direction) + 4
         + (1 if turn_to == 'R' else -1)
@@ -36,16 +36,15 @@ def turn_rover(rover: RoverPosition, turn_to: str) -> RoverPosition:
 
 
 def move_rover(rover: RoverPosition, plateau_size: PlateauSize) -> RoverPosition:
-    x, y = rover.x, rover.y
+    directionTranslation = {
+        "N": Coordinate(0, 1),
+        "E": Coordinate(1, 0),
+        "S": Coordinate(0, -1),
+        "W": Coordinate(-1, 0)
+    }
 
-    if rover.direction == "N":
-        y += 1
-    elif rover.direction == "E":
-        x += 1
-    elif rover.direction == "S":
-        y -= 1
-    elif rover.direction == "W":
-        x -= 1
+    translation = directionTranslation[rover.direction]
+    x, y = rover.x + translation.x, rover.y + translation.y
 
     if (0 <= x <= plateau_size.x) and (0 <= y <= plateau_size.y):
         return RoverPosition(x, y, rover.direction)

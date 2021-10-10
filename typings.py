@@ -7,6 +7,10 @@ class RoverPosition(NamedTuple):
     direction: str
 
 
-class PlateauSize(NamedTuple):
+class Coordinate(NamedTuple):
     x: int
     y: int
+
+
+class PlateauSize(Coordinate):
+    pass
