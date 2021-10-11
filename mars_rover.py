@@ -39,6 +39,10 @@ def execute_mission(
             rover_positions[i] = process_command(
                 command,
                 rover_positions[i],
+            )
+
+            check_position_validity(
+                rover_positions[i],
                 plateau_bounds,
                 rover_positions
             )
@@ -48,16 +52,14 @@ def execute_mission(
 
 def process_command(
     command: str,
-    rover_position: RoverPosition,
-    plateau_bounds: Coordinate,
-    rover_positions: PositionList
+    rover_position: RoverPosition
 ) -> RoverPosition:
 
     if command in 'LR':
         return turn_rover(rover_position, side=command)
 
     if command == "M":
-        return move_rover_forward(rover_position, plateau_bounds, rover_positions)
+        return move_rover_forward(rover_position)
 
     raise CommandError(command)
 
@@ -70,19 +72,47 @@ def turn_rover(rover: RoverPosition, side: str) -> RoverPosition:
     )
 
 
-def move_rover_forward(
+def move_rover_forward(rover: RoverPosition) -> RoverPosition:
+
+    movement = command_translation[rover.direction]["M"]
+
+    return RoverPosition(
+        rover.x + movement.x,
+        rover.y + movement.y,
+        rover.direction
+    )
+
+
+def check_position_validity(
     rover: RoverPosition,
     plateau_bounds: Coordinate,
     rover_positions: PositionList
-) -> RoverPosition:
+) -> None:
 
-    translation = command_translation[rover.direction]["M"]
-    x, y = rover.x + translation.x, rover.y + translation.y
+    position = rover.get_coordinate()
 
-    if rover_positions.is_occupied((x, y)):
-        raise CollisionError((x, y))
+    if rover_positions.has_collision(position):
+        raise CollisionError(position)
 
-    if not ((0 <= x <= plateau_bounds.x) and (0 <= y <= plateau_bounds.y)):
-        raise BoundsError((x, y), plateau_bounds)
+    if not ((0 <= position.x <= plateau_bounds.x) and (0 <= position.y <= plateau_bounds.y)):
+        raise BoundsError(position, plateau_bounds)
 
-    return RoverPosition(x, y, rover.direction)
+
+# if __name__ == "__main__":
+#     bounds = Coordinate(-1, -1)
+#     while bounds.x < 0 or bounds.y < 0:
+#         try:
+#             x, y = map(int, input(
+#                 "Mars exploration plateau horizontal and vertical limit (space separated): ").split())
+#             bounds = Coordinate(x, y)
+#         except:
+#             bounds = Coordinate(-1, -1)
+
+#     missions = []
+#     line = '.'
+#     while line.strip():
+#         try:
+#             position = RoverPosition()
+#             pass
+#         except:
+#             line = '.'

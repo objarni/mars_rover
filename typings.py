@@ -7,7 +7,7 @@ class RoverPosition(NamedTuple):
     direction: str
 
     def get_coordinate(self):
-        return (self.x, self.y)
+        return Coordinate(self.x, self.y)
 
 
 class Coordinate(NamedTuple):
@@ -16,8 +16,11 @@ class Coordinate(NamedTuple):
 
 
 class PositionList(list):
-    def is_occupied(self, coordinate: Coordinate) -> bool:
-        return any(coordinate == pos.get_coordinate() for pos in self)
+    def has_collision(self, coordinate: Coordinate) -> bool:
+        return sum(map(
+            lambda pos: 1 if coordinate == pos.get_coordinate() else 0,
+            self)
+        ) > 1
 
 
 class RoverMission(NamedTuple):
