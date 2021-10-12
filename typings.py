@@ -17,6 +17,9 @@ class Coordinate(NamedTuple):
     x: int
     y: int
 
+    def __str__(self) -> str:
+        return f"({self.x}, {self.y})"
+
 
 class PositionList(list):
     def has_collision(self, coordinate: Coordinate) -> bool:

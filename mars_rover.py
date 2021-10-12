@@ -75,7 +75,6 @@ def turn_rover(rover: RoverPosition, side: str) -> RoverPosition:
 
 
 def move_rover_forward(rover: RoverPosition) -> RoverPosition:
-
     movement = command_translation[rover.direction]["M"]
 
     return RoverPosition(
@@ -109,27 +108,39 @@ def extract_mission_data_from_file(file_handle: TextIOWrapper) -> tuple[Coordina
         for i, line in enumerate(file_handle.readlines()):
             if i % 2 == 0:
                 x, y, direction = line.strip().split()
-                rover_position = RoverPosition(int(x), int(y), direction)
+                starting_position = RoverPosition(int(x), int(y), direction)
             else:
                 command_sequence = line.strip()
                 missions.append(RoverMission(
-                    rover_position, command_sequence))
+                    starting_position, command_sequence))
 
     except:
-        print(
+        exit_with_error_message(
             f"Mission data could not be correctly extracted from file. Isn't it encrypted?")
-        sys.exit(0)
 
     if ((bounds.x <= 0) or (bounds.y <= 0)):
-        print(
+        exit_with_error_message(
             f"Malformed mission plateau data ({bounds.x}, {bounds.y}). Please measure the mission plateau again.")
-        sys.exit(0)
 
     if i % 2 == 0 or not missions:
-        print("Mission data is missing some line. Is the file complete?")
-        sys.exit(0)
+        exit_with_error_message(
+            "Mission data is missing some line. Is the file complete?")
+
+    for starting_position, command_sequence in missions:
+        if not (0 <= starting_position.x <= bounds.x and 0 <= starting_position.y <= bounds.y):
+            exit_with_error_message(
+                f"Rover set to start out of the plateau at position {starting_position}")
+
+        if any(command not in "LRM" for command in command_sequence):
+            exit_with_error_message(
+                f"Invalid command found in sequence '{command_sequence}'. Was the transmission noisy?")
 
     return(bounds, missions)
+
+
+def exit_with_error_message(message: str) -> None:
+    print(message)
+    sys.exit(0)
 
 
 if __name__ == "__main__":
