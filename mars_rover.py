@@ -1,3 +1,5 @@
+import sys
+from io import TextIOWrapper
 from typings import RoverPosition, Coordinate, PositionList, RoverMission
 from exceptions import BoundsError, CollisionError, CommandError
 
@@ -98,21 +100,58 @@ def check_position_validity(
         raise BoundsError(position, plateau_bounds)
 
 
-# if __name__ == "__main__":
-#     bounds = Coordinate(-1, -1)
-#     while bounds.x < 0 or bounds.y < 0:
-#         try:
-#             x, y = map(int, input(
-#                 "Mars exploration plateau horizontal and vertical limit (space separated): ").split())
-#             bounds = Coordinate(x, y)
-#         except:
-#             bounds = Coordinate(-1, -1)
+def extract_mission_data_from_file(file_handle: TextIOWrapper) -> tuple[Coordinate, list[RoverMission]]:
+    try:
+        x, y = file_handle.readline().strip().split()
+        bounds = Coordinate(int(x), int(y))
 
-#     missions = []
-#     line = '.'
-#     while line.strip():
-#         try:
-#             position = RoverPosition()
-#             pass
-#         except:
-#             line = '.'
+        missions = []
+        for i, line in enumerate(file_handle.readlines()):
+            if i % 2 == 0:
+                x, y, direction = line.strip().split()
+                rover_position = RoverPosition(int(x), int(y), direction)
+            else:
+                command_sequence = line.strip()
+                missions.append(RoverMission(
+                    rover_position, command_sequence))
+
+    except:
+        print(
+            f"Mission data could not be correctly extracted from file. Isn't it encrypted?")
+        sys.exit(0)
+
+    if ((bounds.x <= 0) or (bounds.y <= 0)):
+        print(
+            f"Malformed mission plateau data ({bounds.x}, {bounds.y}). Please measure the mission plateau again.")
+        sys.exit(0)
+
+    if i % 2 == 0 or not missions:
+        print("Mission data is missing some line. Is the file complete?")
+        sys.exit(0)
+
+    return(bounds, missions)
+
+
+if __name__ == "__main__":
+    if(len(sys.argv) > 0):
+        filename = sys.argv[1]
+    else:
+        filename = input("Write mission data file name: ")
+
+    try:
+        with open(filename, 'rt', encoding='utf-8') as mission_file:
+            plateau_bounds, rover_missions = extract_mission_data_from_file(
+                mission_file)
+
+        mission_results = execute_mission(plateau_bounds, rover_missions)
+
+        print("Rover final position(s):")
+        for rover_position in mission_results:
+            print(rover_position)
+
+    except FileNotFoundError:
+        print(
+            f"Mission data file '{filename}' could not be found. Isn't it top secret?")
+
+    except (BoundsError, CollisionError, CommandError) as error:
+        print(error.message)

@@ -9,6 +9,9 @@ class RoverPosition(NamedTuple):
     def get_coordinate(self):
         return Coordinate(self.x, self.y)
 
+    def __str__(self) -> str:
+        return f"{self.x} {self.y} {self.direction}"
+
 
 class Coordinate(NamedTuple):
     x: int
