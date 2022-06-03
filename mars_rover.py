@@ -1,5 +1,8 @@
 import sys
 from io import TextIOWrapper
+
+from typing import List, Tuple
+
 from typings import RoverPosition, Coordinate, PositionList, RoverMission
 from exceptions import BoundsError, CollisionError, CommandError
 
@@ -30,8 +33,8 @@ command_translation = {
 
 def execute_mission(
     plateau_bounds: Coordinate,
-    rover_missions: list[RoverMission]
-) -> list[RoverPosition]:
+    rover_missions: List[RoverMission]
+) -> List[RoverPosition]:
 
     rover_positions = PositionList(
         [mission.starting_position for mission in rover_missions])
@@ -99,7 +102,7 @@ def check_position_validity(
         raise BoundsError(position, plateau_bounds)
 
 
-def extract_mission_data_from_file(file_handle: TextIOWrapper) -> tuple[Coordinate, list[RoverMission]]:
+def extract_mission_data_from_file(file_handle: TextIOWrapper) -> Tuple[Coordinate, List[RoverMission]]:
     try:
         x, y = file_handle.readline().strip().split()
         bounds = Coordinate(int(x), int(y))
