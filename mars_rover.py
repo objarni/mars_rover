@@ -116,7 +116,9 @@ def extract_mission_data_from_file(file_handle: TextIOWrapper) -> tuple[Coordina
 
     except:
         exit_with_error_message(
-            f"Mission data could not be correctly extracted from file. Isn't it encrypted?")
+            "Mission data could not be correctly extracted from file. Isn't it encrypted?"
+        )
+
 
     if ((bounds.x <= 0) or (bounds.y <= 0)):
         exit_with_error_message(
