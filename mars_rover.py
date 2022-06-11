@@ -31,6 +31,10 @@ command_translation = {
 }
 
 
+def max_num_of_commands(rover_missions: List[RoverMission]):
+    return max(map(lambda x: len(x[1]), rover_missions))
+
+
 def execute_mission(
     plateau_bounds: Coordinate,
     rover_missions: List[RoverMission]
