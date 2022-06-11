@@ -43,6 +43,8 @@ def execute_mission(
     rover_positions = PositionList(
         [mission.starting_position for mission in rover_missions])
 
+    max_cmds = max_num_of_commands(rover_missions)
+
     for i, (_, command_sequence) in enumerate(rover_missions):
         for command in command_sequence.upper():
             rover_positions[i] = process_command(
